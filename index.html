@@ -1,62 +1,580 @@
-<!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/bootstrap-theme.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"> </script>
-	<script src="js/bootstrap.min.js"></script>
-	<link href='http://fonts.googleapis.com/css?family=Gudea:400,700,400italic' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,700,600,800,900' rel='stylesheet' type='text/css'>
+<!-- Load the Paper.js library -->
+<script type="text/javascript" src="js/paper-full.js"></script>
+<!-- Define inlined PaperScript associate it with myCanvas -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link href='http://fonts.googleapis.com/css?family=Philosopher:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,700,800,900' rel='stylesheet' type='text/css'>
+<script type="text/paperscript" canvas="myCanvas">
+	paper.settings.applyMatrix = false;
+
+	var triangle_big1 = project.importSVG(document.getElementById('triangle_big1'));
+	var triangle_big2 = project.importSVG(document.getElementById('triangle_big2'));
+	var triangle_medium = project.importSVG(document.getElementById('triangle_medium'));
+	var triangle_small1 = project.importSVG(document.getElementById('triangle_small1'));
+	var triangle_small2 = project.importSVG(document.getElementById('triangle_small2'));
+	var square = project.importSVG(document.getElementById('square'));
+	var rhombus = project.importSVG(document.getElementById('rhombus'));
+	var uxbaba = project.importSVG(document.getElementById('uxbaba'));
+	var starbucks = project.importSVG(document.getElementById('starbucks'));
+
+	// "#66BB6A"
+
+	var colors=["#795548","#EF9A9A","#F48FB1","#CE8FB1","#B39DDB","#F48FB1","#9FA8DA","#90CAF9","#81D4FA","#80DEEA","#80CBC4","#A5D6A7","#C5E1A5","#DCE775","#FFF59D","#FFCC80","#FFAB91"];
+
+	var base = new Path.Rectangle({
+	point: [0, view.size.height-52],
+	size: [view.size.width,52],
+	fillColor: "#66BB6A"
+	});
+
+	var center=new Point(view.size.width/2,view.size.height-150);
+
+	uxbaba.position= new Point(center.x,center.y-140);
+	// uxbaba.position= new Point(center.x - 595.28/2,center.y-841.89 );
+	starbucks.position= new Point(view.size.width/2 + 220,view.size.height-95 );
+	center.x= center.x - 230 / 2;
+
+	triangle_big1.position= center + new Point(147.772,49.258);
+	triangle_big2.position= center + new Point(147.772,49.258);
+	triangle_medium.position= center + new Point(221.66,49.258);
+	triangle_small1.position= center + new Point(24.629,24.629);
+	triangle_small2.position= center + new Point(73.887,73.887);
+	square.position= center + new Point(73.887,24.628);
+	rhombus.position= center + new Point(49.258,73.887);
+
+	triangle_big1.rotation= 90;
+	triangle_big2.rotation= -90;
+	triangle_medium.rotation= 90;
+	triangle_small1.rotation=-90;
+	triangle_small2.rotation=180 ;
+	square.rotation=0;
+	rhombus.rotation=0;
+
+	for (var i = 0; i < 7; i++) {
+		var item = project.activeLayer.children[i];
+		item.fillColor=colors[0];
+		item.strokeColor= colors[0];
+	}
+
+	var points=[];
+	var destination1= triangle_big1.position;
+	var destination2= triangle_big2.position;
+	var destination3= triangle_medium.position;
+	var destination4= triangle_small1.position;
+	var destination5= triangle_small2.position;
+	var destination6= square.position;
+	var destination7= rhombus.position;
+	var destinations=[destination1,destination2,destination3,destination4,destination5,destination6,destination7];
+	var dest_rotates=[90,-90,180,0,-90,0,90];
+	var speeds=[25,15,5,10,35,20,30];
+	var rotations=[2,2,2,2,2,2,2];
+	var fliped=[0,0,0,0,0,0,0];
+	var colorCounter=0;
+	var count=1;
+	var completeCount=0;
+	var tangrams=[];
+	var tangramCount=0;
+
+
+   	$.getJSON( "puzzles.json", function( json ) {
+			tangrams=json.tangram;
+			changePuzzle();
+	});
 	
-	<style>
-		html body {
-	 		font-family: 'Raleway', sans-serif;
-	 		font-size:16px;
-	 		color:rgb(255,255,255);
-	 		/*background-image: url("img/bg72.png");*/
-	 		/*background-repeat: no-repeat;*/
-	 		/*background-position: right top;
-	 		background-size:cover;*/
-	 		background-color:rgb(97,97,97);
-	 	}
-	 	h1{
-	 		font-weight:500;
-	 	}
-	 	h4{
-	 		font-weight:200;
-	 	}
-	 	.navCanvas{
-	 		width:100%;
-	 		height:200px;
+	function changePuzzle(){
+		
+			if(tangramCount==tangrams.length){
+				tangramCount=0;
+			}
+			var tangram_points=tangrams[tangramCount].point;
+			for(var i=0; i<7; i++){
+				points[i]= new Point(parseFloat(tangram_points[i].x),parseFloat(tangram_points[i].y));
+			}
+			for(var i=0; i<7; i++){
+				dest_rotates[i]= tangram_points[i].rot;
+			}
+			for(var i=0; i<7; i++){
+				var item = project.activeLayer.children[i];
+				if(tangram_points[i].isFlipped=="true"){
+					item.scale(-1,1);
+					fliped[i]=1;
+				}else{
+					if(fliped[i]==1){ 
+						item.scale(-1,1);
+						fliped[i]=0;
+					}
+				}
+			}
+			for (var i = 0; i < 7; i++) {
+				var item = project.activeLayer.children[i];
+				if(dest_rotates[i] - Math.round(item.rotation)>=0){
+					rotations[i]= -2;
+				}else{
+					rotations[i]= 2;
+				}
+			}
+			tangramCount++;
 
-	 	}
+	}
 
-	 	a{
-			color:rgb(200,200,200);
-			text-decoration: none !important;
+	var paths=[];
+	var path = new Path({
+		strokeColor: colors[0],
+		strokeWidth: 1,
+		strokeCap: 'round',
+		visible:false
+	});
+
+	for(var i=0; i<7; i++){
+		paths[i]= path.clone();
+	}
+	
+	for(var i=0; i<7; i++){
+		var item= project.activeLayer.children[i];
+		paths[i].add(new Point(view.size.width/2 - 145,view.size.height-380));
+		paths[i].add(item.position);
+	}
+
+	var frameHandler = function(event) {
+		completeCount=0;
+		for (var i = 0; i < 7; i++) {
+			var item = project.activeLayer.children[i];
+			var vector = destinations[i] - item.position;
+			var roundRot=Math.round(item.rotation);
+			var eta=dest_rotates[i]-roundRot;
+			if(roundRot==dest_rotates[i] && vector.length<1){
+				item.position=destinations[i];
+				completeCount++;
+				item.fillColor = colors[colorCounter+1];
+				item.strokeColor= colors[colorCounter+1];
+				paths[i].visible = false;
+
+			}else{
+				item.fillColor = colors[colorCounter];
+				item.strokeColor= colors[colorCounter];
+				paths[i].visible = true;
+				paths[i].strokeColor= colors[colorCounter];
+				if(vector.length>20){
+					item.position += vector / speeds[i];
+					item.rotate(rotations[i]);
+				}else if(vector.length>5){
+					item.position += vector.normalize(5);
+					item.rotate(rotations[i]);
+				}else{
+					if(eta==0 || eta==360){
+						item.rotation=dest_rotates[i];
+					}else{
+						item.rotate(rotations[i]);
+					}
+					item.position=destinations[i];
+				}
+				paths[i].lastSegment.point = item.position;
+				var curve= paths[i].curves[0];
+				curve.handle2=vector;
+			}
 		}
+		 if(completeCount==7){
+		 	view.pause();
+		 	colorCounter++;
+		 	if(colorCounter >=15)
+		 		colorCounter=0;
+		 }
+	};
 
-		a h5{
-			color:rgb(255,255,255);
-			text-decoration: none;
+	function onMouseDown(event) {
+		if(count%2!=0){
+			if(!view.responds('frame')){
+	     			view.on('frame', frameHandler);
+	     	}
+	    }else{
+	    	if(view.responds('frame')){
+     			view.off('frame');
+     		}	
+	    }
+     	count++;
+	}
+
+	function onMouseMove(event) {
+
+		if(completeCount==7 && view.responds('frame')){
+			changePuzzle();
 		}
+		view.play();
 
-		a:hover{
-			color:rgb(255,255,255);
-			text-decoration: none;
-		}
+		for (var i = 0; i < 7; i++) {
+			destinations[i] = event.point + points[i];
+		 }
+	}
+	
+</script>
+<style>
+	body {
+            margin: 0;
+            font-family: 'Raleway', sans-serif;
+    }
+    #title {
+        position:absolute;
+        top:3%;
+        left:2%;
+        z-index:999;
+        text-align:center;
+        font-size:1.1em;
+        line-height:0em;
+        }
+    #guide {
+        position:absolute;
+        top:11%;
+        left:0%;
+        width:100%;
+        text-align:center;
+        color:#66BB6A;
+        z-index:999;
+        line-height:0em;
+        font-weight:300;
 
+        -moz-animation-duration: 1s;
+		-moz-animation-name: blink;
+		-moz-animation-iteration-count: infinite;
+		-moz-animation-direction: alternate;
+		  
+		-webkit-animation-duration: 1s;
+		-webkit-animation-name: blink;
+		-webkit-animation-iteration-count: infinite;
+		-webkit-animation-direction: alternate;
+		  
+		animation-duration: 1s;
+		animation-name: blink;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
+            
+    }
+
+    @-moz-keyframes blink {
+	  from {
+	    opacity: 1;
+	  }
+	  
+	  to {
+	    opacity: 0;
+	  }
+	}
+
+	@-webkit-keyframes blink {
+	  from {
+	    opacity: 1;
+	  }
+	  
+	  to {
+	    opacity: 0;
+	  }
+	}
+
+	@keyframes blink {
+	  from {
+	    opacity: 1;
+	  }
+	  
+	  to {
+	    opacity: 0;
+	  }
+	}
+
+    a h1{
+	    color:#66BB6A;
+	    font-weight:500;
+	    text-decoration: none;
+	}
+
+	canvas{
+		width:100% !important;
+		height:100% !important;
+		padding:0 !important;
+		margin:0 !important;
+		display:block;
+		background: -webkit-linear-gradient(rgb(178,235,242),white); /* For Safari 5.1 to 6.0 */
+		background: -o-linear-gradient(rgb(178,235,242),white); /* rgb(224,247,250) For Opera 11.1 to 12.0 */
+		background: -moz-linear-gradient(rgb(178,235,242),white); /* For Firefox 3.6 to 15 */
+		background: linear-gradient(rgb(178,235,242),white); /* Standard syntax */
+	}
+	#stats {
+            position: absolute;
+            left: auto !important;
+            right: 0px;
+        }
+    #subtitle {
+            position:absolute;
+            top:8%;
+            left:2%;
+            font-size:1em;
+            padding:0.25em;
+            z-index:999;
+    }
+
+    #subtitle a {
+    	color: #66BB6A;
+    	opacity:0.5;
+    	text-decoration: none;
+    }
+    #subtitle a:hover {
+    	color: #66BB6A;
+    	opacity:1;
+        text-decoration: none;
+    }
 </style>
+<script>	
+		function hideGuideline(){
+			var element = document.getElementById("guide");
+			if(element!=null)
+			element.parentNode.removeChild(element);
+		}
+</script>
 </head>
-<body>
-	<div class="navCanvas row-fluid">
-	</div>
-	<div class="row-fluid">
-		<center>
-		<h1>Sanket Kulkarni</h1>
-		<a href="files/Sanket_Kulkarni_Portfolio.pdf"> <h4>Download Portfolio <h4> </a>
-		</center>
-	</div>
+<body onclick="hideGuideline();">
+	<div id="title"><a href="index.html"><h1>uxbaba.com</h1></a></div>
+	<div id="subtitle"><a href="files/Sanket_Kulkarni_Portfolio.pdf">Download Portfolio</a></div>
+	<div id="guide"> <p >Click to see Baba's Magic</p></div>
+	<canvas id="myCanvas" style="position:absolute" resize stats>
+		<svg version="1.1" id="triangle_big1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px">
+		 <g fill="#000000" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10"  stroke-dashoffset="0" font-family="sans-serif" font-weight="normal" font-size="12" text-anchor="start" mix-blend-mode="normal">
+			<polygon points="98.517,98.515 0,0 0,98.515 	"/>
+	 	 </g>
+		</svg>
+		<svg version="1.1" id="triangle_big2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px">
+		 <g fill="#000000" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10"  stroke-dashoffset="0" font-family="sans-serif" font-weight="normal" font-size="12" text-anchor="start" mix-blend-mode="normal">
+			<polygon points="98.517,98.515 0,0 0,98.515 	"/>
+	 	 </g>
+		</svg>
+		<svg version="1.1" id="triangle_medium" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px">
+		 <g fill="#000000" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10"  stroke-dashoffset="0" font-family="sans-serif" font-weight="normal" font-size="12" text-anchor="start" mix-blend-mode="normal">
+			<polygon points="98.515,49.258 49.258,0 0,49.258 	"/>
+	 	 </g>
+		</svg>
+		<svg version="1.1" id="triangle_small1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px">
+		 <g fill="#000000" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10"  stroke-dashoffset="0" font-family="sans-serif" font-weight="normal" font-size="12" text-anchor="start" mix-blend-mode="normal">
+			<polygon points="0,0 0,49.258 49.259,49.258 "/>
+	 	 </g>
+		</svg>
+		<svg version="1.1" id="triangle_small2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px">
+		 <g fill="#000000" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10"  stroke-dashoffset="0" font-family="sans-serif" font-weight="normal" font-size="12" text-anchor="start" mix-blend-mode="normal">
+			<polygon points="0,0 0,49.258 49.259,49.258 "/>
+	 	 </g>
+		</svg>
+		<svg version="1.1" id="square" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px">
+		 <g fill="#000000" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10"  stroke-dashoffset="0" font-family="sans-serif" font-weight="normal" font-size="12" text-anchor="start" mix-blend-mode="normal">
+			<rect width="49.256" height="49.255"/>
+	 	 </g>
+		</svg>
+		<svg version="1.1" id="rhombus" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px">
+		 <g fill="#000000" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10"  stroke-dashoffset="0" font-family="sans-serif" font-weight="normal" font-size="12" text-anchor="start" mix-blend-mode="normal">
+			<polygon points="98.515,49.259 49.257,0 0,0 49.257,49.259 	"/>
+	 	 </g>
+		</svg>
+
+		<svg id="uxbaba" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+			 width="595.28px" height="841.89px" viewBox="0 0 595.28 841.89" enable-background="new 0 0 595.28 841.89" xml:space="preserve">
+		<path fill="#ED6D23" d="M173.676,320.768c0.128-10.223-52.828-36.096-95.884-36.096s-60.035,16.162-60.035,36.096
+			c0,19.936,16.979,36.097,60.035,36.097S173.548,330.994,173.676,320.768z"/>
+		<path fill="#ED6D23" d="M173.676,320.768c-0.128-10.223,52.829-36.096,95.885-36.096s60.033,16.162,60.033,36.096
+			c0,19.936-16.978,36.097-60.033,36.097S173.804,330.994,173.676,320.768z"/>
+		<path fill="#ED6D23" d="M181.252,87.301l-8.288,72.627l-6.827-72.464c-56.626,3.924-79.219,32.966-85.874,88.074
+			c-2.786,23.078,44.119-31.728,32.21,91.896c-5.517,57.279,8.745,50.438,65.262,50.438c56.517,0,98.509-19.244,98.509-76.79
+			C276.244,185.081,267.945,91.468,181.252,87.301z"/>
+		<polygon fill="#EACBC6" points="159.094,82.588 185.182,82.588 172.964,159.928 "/>
+		<path fill="#EACBC6" d="M181.614,289.831c0,0,2.415-4.779,0.976-11.506c0.029-3.938,1.233-5.818,8.051-7.462
+			c6.814-1.647,10.48,3.688,10.48,3.688c2.65,5.212,13.632,6.346,16.453,5.171c18.334-9.282,26.793-5.404,26.793-5.404l6.112,2.821
+			c0,0,4.385-1.014,7.286-0.941c2.902,0.074,4.7,1.646,4.7,1.646s2.169,1.718,2.586,3.29c0.418,1.572,0,3.996,0,3.996
+			s-5.582-0.762-12.927,2.35c-3.498,1.779-1.682,2.452-8.227,6.111c-6.545,3.656-17.394,3.996-17.394,3.996l-22.327,2.115
+			l-17.862,5.874L181.614,289.831z"/>
+		<path fill="#EACBC6" d="M140.474,38.777c0-35.47,20.203-39.088,32.483-38.758c12.281,0.33,34.182,1.636,34.182,37.104
+			c0,35.472-16.395,62.932-34.759,62.264C154.016,98.717,140.474,74.245,140.474,38.777z"/>
+		<path d="M196.405,82.032c-0.926,1.385-3.091,4.64-3.793,5.477c-1.333,1.589-1.972,1.029-2.788,0
+			c-0.608-7.84-5.171-12.525-10.206-14.394c-3.339-1.03-5.837-1.628-6.608-0.346c-0.018,0.027-0.035,0.056-0.052,0.083
+			c-0.001-0.001-0.001-0.001-0.001-0.001s0,0,0,0.001c-0.017-0.028-0.036-0.057-0.053-0.083c-0.77-1.282-3.27-0.684-6.607,0.346
+			c-5.034,1.869-9.6,6.554-10.207,14.394c-0.816,1.029-1.454,1.589-2.788,0c-0.703-0.836-2.866-4.092-3.792-5.477
+			c0.691,2.895,4.934,11.61,7.129,13.866v-0.001c3.365,4.247,9.414,7.081,16.318,7.081l0,0c0,0,0,0,0.001,0
+			c6.903,0,12.952-2.834,16.316-7.081v0.001C191.469,93.642,195.713,84.926,196.405,82.032z M182.301,94.149
+			c-2.586,1.275-6.062,1.425-9.344,1.195c-3.282,0.23-6.758,0.081-9.345-1.195c-5.861-2.891-5.822-6.641-5.822-6.641
+			c0-1.808,1.103-3.522,2.366-4.777c0.001-0.002,0.839-1.031,1.639-1.502c0.797-0.47,4.653-2.874,9.457-3.074
+			c0.618-0.256,1.155-0.493,1.596-0.712c0.017,0.009,0.063,0.013,0.109,0.013c0.045,0,0.094-0.003,0.11-0.013
+			c0.44,0.219,0.976,0.456,1.595,0.712c4.803,0.2,8.66,2.604,9.459,3.074c0.799,0.471,1.635,1.5,1.638,1.502
+			c1.263,1.255,2.365,2.97,2.365,4.777C188.124,87.508,188.164,91.259,182.301,94.149z"/>
+		<g>
+			<g>
+				<path d="M161.681,51.275c0,0-0.148,0.175-0.422,0.457c-0.139,0.138-0.304,0.311-0.504,0.49c-0.184,0.194-0.46,0.36-0.747,0.552
+					c-0.292,0.184-0.609,0.425-0.974,0.569c-0.363,0.153-0.741,0.354-1.162,0.468c-0.421,0.106-0.855,0.26-1.314,0.306
+					c-0.457,0.055-0.924,0.125-1.393,0.103c-0.47,0.001-0.937-0.029-1.39-0.113c-0.458-0.048-0.89-0.192-1.31-0.302
+					c-0.825-0.276-1.559-0.615-2.126-1.008c-1.165-0.737-1.683-1.521-1.683-1.521s0.218,0.071,0.591,0.174
+					c0.371,0.106,0.894,0.249,1.508,0.396c1.234,0.291,2.83,0.574,4.418,0.566c0.398,0.032,0.792-0.029,1.184-0.035
+					c0.394-0.007,0.771-0.097,1.15-0.123c0.377-0.038,0.73-0.142,1.082-0.192c0.358-0.046,0.661-0.151,0.967-0.218
+					c0.298-0.089,0.593-0.113,0.848-0.215c0.254-0.089,0.485-0.15,0.672-0.205C161.456,51.32,161.681,51.275,161.681,51.275z"/>
+			</g>
+		</g>
+		<g>
+			<g>
+				<path d="M198.788,51.275c0,0-0.147,0.175-0.422,0.457c-0.138,0.138-0.304,0.311-0.505,0.49c-0.184,0.194-0.459,0.36-0.746,0.553
+					c-0.292,0.184-0.609,0.425-0.974,0.568c-0.363,0.153-0.741,0.354-1.161,0.468c-0.422,0.105-0.855,0.26-1.314,0.305
+					c-0.457,0.055-0.924,0.125-1.393,0.103c-0.471,0.001-0.938-0.029-1.391-0.114c-0.458-0.047-0.891-0.192-1.309-0.302
+					c-0.825-0.276-1.56-0.615-2.127-1.008c-1.164-0.737-1.683-1.521-1.683-1.521s0.218,0.071,0.591,0.174
+					c0.371,0.106,0.894,0.249,1.508,0.396c1.234,0.291,2.83,0.574,4.418,0.567c0.398,0.032,0.792-0.028,1.185-0.035
+					c0.394-0.007,0.771-0.097,1.149-0.123c0.377-0.038,0.73-0.142,1.082-0.192c0.357-0.046,0.66-0.151,0.967-0.218
+					c0.299-0.089,0.593-0.113,0.849-0.215c0.253-0.089,0.484-0.15,0.672-0.205C198.563,51.32,198.788,51.275,198.788,51.275z"/>
+			</g>
+		</g>
+		<path d="M172.957,89.301c2.455,0,4.444-0.801,4.444-1.793c0,0-1.052,0.498-4.444,0.432c-3.391-0.064-4.445-0.432-4.445-0.432
+			C168.512,88.5,170.502,89.301,172.957,89.301z"/>
+		<g>
+			<g>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#EACBC6" d="M31.312,129.612c0.789-1.628,1.538-3.277,2.369-4.883
+					c1.603-3.097,3.482-6.016,6.118-8.342c2.106-1.859,4.469-3.048,7.405-2.112c1.388,0.443,1.55,0.824,0.806,2.092
+					c-0.388,0.657-0.805,1.305-1.277,1.902c-2.679,3.394-4.249,7.283-5.159,11.466c-0.472,2.176-0.801,4.388-1.379,6.534
+					c-0.676,2.515-1.501,4.995-2.354,7.456c-1.106,3.189-2.276,6.356-3.485,9.505c-0.253,0.659-0.684,1.337-1.222,1.776
+					c-1.018,0.826-1.425,1.858-1.105,3.029c0.507,1.862-0.497,2.766-1.888,3.559c-2.896,1.653-6.073,2.306-9.337,2.627
+					c-2.167,0.214-4.335,0.246-6.478-0.27c-0.17-0.042-0.344-0.074-0.515-0.121c-2.005-0.548-2.206-0.791-2.224-2.846
+					c-0.017-2.229-9.601-20.974-10.823-22.624c-0.909-1.228-1.264-2.546-0.982-4.053c0.567-3.049,1.051-6.117,1.693-9.151
+					c0.471-2.221,1.645-3.846,4.161-3.796c0.254-0.917,0.427-1.781,0.733-2.595c0.613-1.623,2.286-2.694,3.979-2.456
+					c0.574,0.081,1.085,0.596,1.593,0.895c0.323-1.017,0.604-2.204,1.07-3.313c0.694-1.657,1.801-2.946,3.771-2.971
+					c0.777-0.009,1.558,0.252,2.404,0.404c-0.053-0.385-0.136-0.977-0.22-1.567c-0.859-6.083-1.712-12.166-2.575-18.25
+					c-0.168-1.196-0.08-2.35,0.58-3.395c0.847-1.336,2.405-1.988,4.066-1.617c1.682,0.376,2.625,1.595,2.905,3.191
+					c0.534,3.039,0.917,6.102,1.365,9.156c1.087,7.444,2.06,14.909,3.319,22.325c0.492,2.883,1.631,5.657,2.476,8.479
+					C31.174,129.638,31.243,129.626,31.312,129.612z"/>
+			</g>
+			<g>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#26C6DA" d="M18.744,69.353c1.44,0.233,2.936,0.292,4.31,0.73
+					c4.891,1.559,8.093,4.895,9.225,9.883c1.258,5.554-0.474,10.246-4.847,13.918C26.93,94.307,26.338,94.617,25.75,95
+					c-0.393-0.667-0.205-1.059,0.367-1.451c3.625-2.48,5.502-5.997,5.538-10.325c0.057-6.885-4.974-11.756-10.733-12.624
+					c-7.173-1.083-13.851,4.063-14.505,11.593c-0.469,5.412,3.119,10.978,8.316,12.774c1.19,0.411,1.19,0.411,1.224,1.595
+					c-1.372-0.609-2.734-1.02-3.889-1.757c-4.994-3.188-7.32-7.817-6.484-13.687c0.799-5.605,4.127-9.312,9.541-11.092
+					c0.128-0.041,0.238-0.142,0.356-0.215C16.568,69.66,17.657,69.507,18.744,69.353z"/>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#26C6DA" d="M15.483,93.119c-3.783-0.778-7.265-5.583-7.186-9.978
+					c0.107-5.817,4.081-9.553,8.315-10.496c5.87-1.309,10.811,2.174,12.519,6.804c1.616,4.385-0.097,9.984-3.875,12.306
+					c-0.31-0.593-0.202-1.012,0.312-1.476c2.993-2.703,3.967-6.912,2.518-10.69c-1.417-3.697-4.993-6.18-8.974-6.227
+					c-6.09-0.071-10.746,5.531-9.588,11.519c0.618,3.197,2.397,5.508,5.291,6.954C15.404,92.13,15.616,92.501,15.483,93.119z"/>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#26C6DA" d="M24.543,88.184c0.109-0.539,0.087-1.151,0.345-1.605
+					c1.907-3.376,0.787-7.521-2.594-9.416c-3.283-1.842-7.487-0.57-9.28,2.807c-1.363,2.569-0.825,5.819,1.266,7.981
+					c0.405,0.418,0.641,0.998,1.077,1.696c-2.202-0.438-4.082-3.702-4.126-6.657c-0.048-3.22,2.515-6.58,5.642-7.396
+					c3.682-0.961,7.434,0.689,9.094,3.939C27.676,82.878,26.593,86.696,24.543,88.184z"/>
+			</g>
+		</g>
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="#ED6D23" d="M8.273,160.371c3.293,0.023,25.803-1.675,25.803-1.675
+			c16.689,37.925,21.601,54.594,26.463,55.813c4.863,1.217,28.005-75.475,28.005-75.475l35.838,14.888
+			c0,0-19.6,100.516-58.054,102.265C28.187,249.961,25.706,209.77,8.273,160.371z"/>
+		<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="8.966" cy="160.394" r="2.6"/>
+		<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="14.166" cy="159.86" r="2.599"/>
+		<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="19.364" cy="159.551" r="2.6"/>
+		<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="24.564" cy="158.869" r="2.601"/>
+		<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="29.764" cy="158.373" r="2.599"/>
+		<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="34.963" cy="158.062" r="2.6"/>
+		<g>
+			<g>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M176.02,185.832c-0.538-0.929-1.039-1.794-1.541-2.661
+					c-0.487-0.841-0.974-1.68-1.509-2.602c-0.558,0.969-1.058,1.836-1.56,2.703c-0.484,0.84-0.971,1.68-1.453,2.518
+					c-1.715-0.936-2.688-3.367-2.213-5.413c0.549-2.365,2.614-4.149,4.946-4.276c2.303-0.125,4.626,1.468,5.326,3.648
+					C178.771,182.096,178.011,184.492,176.02,185.832z"/>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M168.213,188.817c-1.08,1.888-2.129,3.722-3.253,5.689
+					c2.104,0,4.046,0,5.987,0c-0.04,1.928-1.814,3.754-3.82,4.309c-2.108,0.58-4.612-0.419-5.803-2.303
+					c-1.312-2.076-1.13-4.545,0.453-6.428C162.995,188.639,165.566,187.448,168.213,188.817z"/>
+				<path fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" d="M174.947,194.545c1.982,0,3.9,0,6.048,0
+					c-1.13-1.988-2.179-3.836-3.228-5.684c2.029-1.105,4.385-0.749,6.092,0.872c1.647,1.565,2.082,4.198,1.037,6.293
+					c-0.971,1.946-3.291,3.216-5.338,2.919C177.159,198.598,175.318,196.885,174.947,194.545z"/>
+			</g>
+			<g>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="141.219" cy="94.35" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="141.626" cy="99.549" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="142.252" cy="104.75" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="142.777" cy="109.949" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="143.489" cy="115.148" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="144.227" cy="120.346" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="144.853" cy="125.545" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="146.087" cy="130.745" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="147.115" cy="135.944" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="148.191" cy="141.143" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="149.715" cy="146.342" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="151.039" cy="151.334" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="153.018" cy="156.213" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="154.914" cy="161.04" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="157.225" cy="165.815" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="159.825" cy="170.281" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="163.096" cy="174.5" r="2.6"/>
+			</g>
+			<g>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="204.696" cy="94.584" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="204.287" cy="99.783" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="203.662" cy="104.981" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="203.139" cy="110.182" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="202.427" cy="115.38" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="201.688" cy="120.579" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="201.063" cy="125.778" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="199.828" cy="130.979" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="198.799" cy="136.177" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="197.724" cy="141.376" r="2.599"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="196.199" cy="146.576" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="194.877" cy="151.569" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="192.897" cy="156.446" r="2.601"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="191" cy="161.273" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="188.69" cy="166.049" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="186.09" cy="170.516" r="2.6"/>
+				<circle fill-rule="evenodd" clip-rule="evenodd" fill="#FFFFFF" cx="182.818" cy="174.732" r="2.599"/>
+			</g>
+		</g>
+		<path fill="#EACBC6" d="M164.313,289.831c0,0-2.415-4.779-0.974-11.506c-0.031-3.938-1.235-5.818-8.05-7.462
+			c-6.817-1.647-10.483,3.688-10.483,3.688c-2.651,5.212-13.632,6.346-16.452,5.171c-18.333-9.282-26.793-5.404-26.793-5.404
+			l-6.113,2.821c0,0-4.385-1.014-7.286-0.941c-2.902,0.074-4.701,1.646-4.701,1.646s-2.168,1.718-2.585,3.29
+			c-0.418,1.572,0,3.996,0,3.996s5.582-0.762,12.926,2.35c3.498,1.779,1.682,2.452,8.228,6.111c6.545,3.656,17.394,3.996,17.394,3.996
+			l22.328,2.115l17.862,5.874L164.313,289.831z"/>
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M209.564,38.653c-1.053-1.696-3.524-2.062-3.524-2.062
+			c-6.938-1.461-22.257-1.547-22.257-1.547h-10.826H162.13c0,0-15.317,0.086-22.257,1.547c0,0-2.47,0.366-3.522,2.062
+			c-0.322,0.646-0.183,3.481,1.075,3.953c1.363,0.354,1.246,0,1.246,0l0.086-1.117l1.897-1.668l5.535-1.43l26.768-0.622l26.767,0.622
+			l5.538,1.43l1.896,1.668l0.085,1.117c0,0-0.118,0.354,1.246,0C209.746,42.135,209.886,39.299,209.564,38.653z"/>
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M182.688,59.471c0,0-2.271-7.622-9.73-8.573c-7.46,0.951-9.732,8.573-9.732,8.573
+			s-0.321,0.725,0.34,0.337c2.917-3.801,5.574-7.781,9.393-7.62c3.818-0.161,6.479,3.818,9.395,7.62
+			C183.012,60.196,182.688,59.471,182.688,59.471z"/>
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="172.9575" y1="61.0469" x2="172.9575" y2="37.7495">
+			<stop  offset="0" style="stop-color:#FFFFFF"/>
+			<stop  offset="1" style="stop-color:#414042"/>
+		</linearGradient>
+		<path opacity="0.7" fill-rule="evenodd" clip-rule="evenodd" fill="url(#SVGID_1_)" stroke="#58595B" stroke-width="0.1289" stroke-miterlimit="10" d="
+			M207.437,41.51c0,0-0.676-1.127-3.286-2.062c-1.494-0.512-3.223-1.03-4.704-0.966c-3.34-0.433-18.827-0.65-26.489-0.733
+			c-7.663,0.083-23.148,0.3-26.488,0.733c-1.482-0.064-3.211,0.455-4.705,0.966c-2.61,0.935-3.287,2.062-3.287,2.062
+			s-1.096,6.703,1.225,12.633c6.09,7.121,18.883,6.477,20.106,6.896c2.578,0.129,3.224-1.289,3.416-1.481
+			c1.838-3.641,3.996-7.347,9.732-8.572c5.736,1.225,7.896,4.931,9.73,8.572c0.195,0.193,0.84,1.611,3.418,1.481
+			c1.225-0.418,14.016,0.226,20.106-6.896C208.533,48.213,207.437,41.51,207.437,41.51z"/>
+		<rect x="145.245" y="43.523" opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" fill="#8DC63F" width="8.53" height="11.189"/>
+		<rect x="155.56" y="43.523" opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" fill="#F9ED32" width="8.529" height="1.384"/>
+		<rect x="155.56" y="46.426" opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" fill="#00AEEF" width="8.529" height="1.383"/>
+		</svg>
+		<svg version="1.1" id="starbucks" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="595.279px" height="841.89px" viewBox="0 0 595.279 841.89" enable-background="new 0 0 595.279 841.89"
+	 xml:space="preserve">
+<g>
+	<g>
+		<path fill="#999999" d="M8.804,30.929l-1.54-3.514c-0.489-1.185-1.068-2.309-1.404-3.611c-0.317-1.277-0.4-2.633-0.167-3.945
+			c0.224-1.312,0.721-2.581,1.447-3.699c0.717-1.125,1.66-2.102,2.734-2.878c1.07-0.781,2.259-1.377,3.482-1.838
+			c2.472-0.883,5.07-1.212,7.639-1.265c1.285-0.039,2.565-0.027,3.85,0.043c1.281,0.085,2.563,0.175,3.834,0.392
+			c1.267,0.225,2.531,0.53,3.729,1.07c0.594,0.277,1.172,0.62,1.67,1.085c0.485,0.465,0.909,1.077,1.023,1.801
+			c0.124,0.72-0.073,1.46-0.419,2.065c-0.35,0.61-0.838,1.109-1.368,1.528c-1.07,0.833-2.318,1.366-3.599,1.706
+			c-2.576,0.658-5.291,0.536-7.837-0.115l-0.016-0.004l-0.026-0.009c-1.105-0.377-2.188-0.837-3.241-1.371
+			c-1.053-0.535-2.069-1.176-2.984-1.977c-0.895-0.809-1.709-1.829-2.051-3.069c-0.351-1.234-0.199-2.54,0.188-3.677
+			c0.776-2.306,2.305-4.125,3.447-6.061c0.273-0.485,0.528-0.992,0.601-1.498C17.88,1.584,17.66,1.131,17.2,0.844
+			c-0.453-0.283-1.007-0.446-1.562-0.561c-0.558-0.113-1.128-0.18-1.7-0.232l0.004-0.104c0.577,0.006,1.156,0.027,1.735,0.097
+			c0.577,0.074,1.162,0.188,1.714,0.472c0.271,0.15,0.536,0.359,0.707,0.656c0.176,0.295,0.22,0.65,0.194,0.967
+			c-0.06,0.645-0.315,1.198-0.572,1.728c-1.07,2.084-2.48,3.935-3.118,6.051c-0.313,1.043-0.387,2.134-0.069,3.118
+			c0.303,0.988,0.966,1.851,1.775,2.568c1.654,1.433,3.775,2.334,5.887,3.121l-0.042-0.013c2.384,0.658,4.935,0.817,7.333,0.251
+			c1.193-0.279,2.359-0.734,3.334-1.444c0.951-0.694,1.777-1.726,1.647-2.858c-0.129-1.138-1.184-2.011-2.266-2.563
+			c-1.108-0.575-2.348-0.903-3.59-1.137c-1.246-0.226-2.515-0.369-3.786-0.403c-1.271-0.038-2.548-0.037-3.814,0.049
+			c-2.528,0.192-5.048,0.659-7.354,1.624c-1.154,0.466-2.266,1.042-3.247,1.787c-0.968,0.754-1.881,1.593-2.55,2.621
+			c-1.382,2.021-1.876,4.602-1.403,7.03c0.229,1.196,0.79,2.388,1.178,3.599l1.26,3.624L8.804,30.929z"/>
+	</g>
+	<polygon fill="#E6E6E6" points="33.129,34.602 32.675,28.338 32.417,28.263 22.394,28.263 20.224,28.263 14.923,28.263 
+		13.791,28.263 2.729,28.263 2.471,28.338 2.018,34.602 0,34.602 0,38.317 1.133,38.317 4.584,86.898 13.791,86.898 14.923,86.898 
+		20.224,86.898 22.394,86.898 30.562,86.898 34.015,38.317 35.148,38.317 35.148,34.602 	"/>
+	<polygon fill="#B79672" points="2.033,51.002 3.593,72.938 31.554,72.938 33.114,51.002 	"/>
+	<circle fill="#046949" cx="17.573" cy="61.969" r="7.044"/>
+	<polygon fill="#CCCCCC" points="33.125,34.551 32.675,28.338 32.417,28.263 22.394,28.263 20.226,28.263 14.924,28.263 
+		13.791,28.263 2.729,28.263 2.472,28.338 2.022,34.551 	"/>
+</g>
+</svg>
+</canvas>
 </body>
 </html>
-
