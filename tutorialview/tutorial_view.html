@@ -19,6 +19,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/howler.js"></script>
+  <script src="js/audio.js"></script>
   <style>
 
   #tutorial .carousel-indicators {
@@ -281,18 +282,19 @@
 var tutorialJSON = '{"header":{"status":800,"message":""},"body":{"id":3,"title":"How to add admin to a Whatsapp Group ?","appId":2,"androidPackage":"com.whatsapp","icon":"http:\/\/tippie.io.md-in-56.webhostbox.net\/res\/tutorials\/3\/android\/icon.png","phoneId":null,"userId":3,"viewCount":178,"recommendCount":1,"playUrl":"https:\/\/play.google.com\/store\/apps\/details?id=com.whatsapp&hl=en","stepCount":7,"steps":[{"img":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/images\/1.png","voiceTip":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/audio\/1_en.mp3","gesture":{"left":37.5,"top":50.954773,"type":"tap"},"textTip":null,"stepIndex":1},{"img":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/images\/2.png","voiceTip":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/audio\/2_en.mp3","gesture":{"left":32.67857,"top":26.030151,"type":"tap"},"textTip":null,"stepIndex":2},{"img":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/images\/3.png","voiceTip":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/audio\/3_en.mp3","gesture":{"left":28.035715,"top":8.542713,"type":"tap"},"textTip":null,"stepIndex":3},{"img":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/images\/4.png","voiceTip":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/audio\/4_en.mp3","gesture":{"left":42.32143,"top":82.21105,"type":"swipe_up"},"textTip":null,"stepIndex":4},{"img":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/images\/5.png","voiceTip":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/audio\/5_en.mp3","gesture":{"left":33.75,"top":48.743717,"type":"tap"},"textTip":null,"stepIndex":5},{"img":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/images\/6.png","voiceTip":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/audio\/6_en.mp3","gesture":{"left":30.714285,"top":55.276382,"type":"tap"},"textTip":null,"stepIndex":6},{"img":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/images\/7.png","voiceTip":"http:\/\/tippie.io\/res\/tutorials\/3\/android\/audio\/7_en.mp3","gesture":null,"textTip":null,"stepIndex":7}],"appName":"Whatsapp","appIcon":"http:\/\/tippie.io.md-in-56.webhostbox.net\/res\/apps\/com.whatsapp\/android\/icon.png","phoneName":null,"phoneIcon":null,"langPack":"en"}}' ;
 
 var tutorial = JSON.parse(tutorialJSON);
-var currentAudio ; 
+// var currentAudio ; 
 $('.carousel').on('slid.bs.carousel', function () {
    // This variable contains all kinds of data and methods related to the carousel
     var carouselData = $(this).data('bs.carousel');
     // get current index of active element
     var currentIndex = carouselData.getItemIndex(carouselData.$element.find('.item.active'));
-    currentAudio = null;
-    currentAudio = new Howl({
-                        src: [tutorial.body.steps[currentIndex].voiceTip]
-                        });
+    // currentAudio = null;
+    // currentAudio = new Howl({
+    //                     src: [tutorial.body.steps[currentIndex].voiceTip]
+    //                     });
 
-    currentAudio.play();
+    // currentAudio.play();
+    playAudio(tutorial.body.steps[currentIndex].voiceTip);
 })
 
 $(function() {
