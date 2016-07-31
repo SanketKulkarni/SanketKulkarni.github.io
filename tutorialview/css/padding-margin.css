@@ -1,0 +1,106 @@
+  #format-features{
+    margin: 0;
+    padding: 0;
+  }
+
+  #format-features li {
+    padding: 10px 0px 13px 50px; /*--Adds padding around each item--*/
+    margin: 0;
+  }
+
+#slide1.jumbotron{
+  padding-bottom:0px;
+}
+
+
+@media(max-width:767px){
+  #slide1{
+    padding-top: 70px;
+  }
+  h1,h2,h3,h4,h5,p {
+    text-align: center;
+  }
+
+  #slide1 h1, h3{
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  #slide1 img{
+    margin-top:50px;
+  }
+
+  #slide2 {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    /*background: rgb(0,91,170) url(img/tippie_backdrop4.jpg) repeat left top;*/
+  }
+  #slide3 {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  #slide4 {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  #slide5 {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  #slide6 {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  #slide7 {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  #slide6 img{
+    padding-left:50px;
+    padding-right:50px;
+  }
+
+  #playstore-badge{
+    margin-top:30px;
+  }
+
+}
+
+@media(min-width:768px){
+  #slide1{
+    padding-top: 150px;
+  }
+  #slide2 {
+    padding-top: 60px;
+    padding-bottom: 60px;
+    /*background: rgb(0,91,170) url(img/tippie_backdrop4.jpg) repeat left top;*/
+  }
+  #slide3 {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  #slide4 {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  #slide5 {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  #slide6 {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  #slide7 {
+    padding-top: 30px;
+    padding-bottom: 10px;
+  }
+}
+@media(min-width:992px){}
+@media(min-width:1200px){}
+
+hr{
+ margin-top: 0px;
+ margin-bottom: 0px;
+}
+

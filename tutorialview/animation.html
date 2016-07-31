@@ -1,0 +1,24 @@
+<html>
+<head>
+	<style>
+	body {
+		background: #24aecd;
+	}
+
+	.monster {
+		width: 166px;
+		height: 300px;
+		margin: 2% auto;
+		background: url('img/hand.png') left center;
+		animation: play .8s steps(18) infinite;
+	}
+
+	@keyframes play {
+		100% { background-position: -2988px; }
+	}
+	</style>
+</head>
+<body>
+	<div oncontextmenu="return false" class="monster"></div>
+</body>
+</html>

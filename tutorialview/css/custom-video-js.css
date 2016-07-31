@@ -1,0 +1,108 @@
+.vjs-default-skin .vjs-big-play-button {
+  font-size: 3em;
+  line-height: 3em;
+  height: 3em;
+  width: 3em;
+  border: 0 solid #fff;
+  border-radius: 1.5em;
+  left: 50%;
+  top: 50%;
+  margin-left: -1.5em;
+  margin-top: -1.5em;
+}
+
+.video-js{
+  background:none;
+}
+
+.video-js .vjs-control-bar {
+  display: none;  
+}
+
+@media(max-width:767px){
+
+  #video_container {
+    background: url('../img/phone_bg_xs.png') no-repeat top left transparent;
+    width: 330px; /* Adjust TV image width */
+    height: 676px; /* Adjust TV image height */
+    position: relative;
+  }
+
+  #video_container div{
+    max-width: 290px;
+    top:57px;
+    left:21px;
+  }
+  .video-js .vjs-tech{
+    max-width: 290px;
+  }
+  .video-dimensions {
+    width: 290px;
+    height: 516px;
+  }
+
+}
+@media(min-width:768px){
+ #video_container {
+  background: url('../img/phone_bg_sm.png') no-repeat top left transparent;
+  width: 282px; /* Adjust TV image width */
+  height: 578px; /* Adjust TV image height */
+  position: relative;
+}
+
+#video_container div{
+  max-width: 248px;
+  top:48px;
+  left:18px;
+}
+.video-js .vjs-tech{
+  max-width: 248px;
+}
+.video-dimensions {
+  width: 248px;
+  height: 441px;
+}
+}
+@media(min-width:992px){
+ #video_container {
+  background: url('../img/phone_bg_sm.png') no-repeat top left transparent;
+  width: 282px; /* Adjust TV image width */
+  height: 578px; /* Adjust TV image height */
+  position: relative;
+}
+
+#video_container div{
+  max-width: 248px;
+  top:48px;
+  left:18px;
+}
+.video-js .vjs-tech{
+  max-width: 248px;
+}
+.video-dimensions {
+  width: 248px;
+  height: 441px;
+}
+
+}
+@media(min-width:1200px){
+ #video_container {
+  background: url('../img/phone_bg_sm.png') no-repeat top left transparent;
+  width: 282px; /* Adjust TV image width */
+  height: 578px; /* Adjust TV image height */
+  position: relative;
+}
+
+#video_container div{
+  max-width: 248px;
+  top:48px;
+  left:18px;
+}
+.video-js .vjs-tech{
+  max-width: 248px;
+}
+.video-dimensions {
+  width: 248px;
+  height: 441px;
+}
+}

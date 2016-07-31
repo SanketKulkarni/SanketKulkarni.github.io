@@ -1,0 +1,68 @@
+  /*
+
+Primary Extra Dark rgb(0, 45,71)
+Primary Dark rgb(0, 63,132)
+Primary rgb(0,91,170)
+Primary Light rgb(0,160,229)
+Primary Extra Light rgb(135,198,229)
+Primary Extra Extra Light rgb(224,242,252)
+Accent rgb(255, 198, 0)
+Accent Light rgb(255, 234, 170)
+Accent Extra Light rgb( 244, 247, 216)
+
+*/
+
+  #format-features{
+    list-style: none; /*--Takes out the default bullets--*/
+  }
+  #format-features li {
+    background: url(../img/bullet.png) no-repeat left center; /*--Adds a bullet icon as a background image--*/
+  }
+
+  #slide1{
+    background: rgb(0, 45,71);
+/*  background-image: url("img/background.jpg");
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+*/}
+
+#slide2 {
+  background: rgb(255, 234, 170);
+  /*background: rgb(0,91,170) url(img/tippie_backdrop4.jpg) repeat left top;*/
+}
+#slide3 {
+  background: rgb(255, 234, 170);
+}
+#slide4 {
+  background: rgb(255, 234, 170);
+}
+#slide5 {
+  background: rgb(255, 234, 170);
+}
+#slide6 {
+  background: rgb(255, 234, 170);
+}
+#slide7 {
+  background: rgb(255, 198, 0);
+}
+
+
+@media(max-width:767px){
+  h1,h2,h3,h4,h5,p {
+    text-align: center;
+  }
+
+}
+
+hr{
+ border-color:rgb(255, 198, 0);
+}
+
+#slide1 h1{
+  color: rgb(255, 198, 0);
+}
+
+#slide1 h4{
+  color: rgb(0,160,229);
+}

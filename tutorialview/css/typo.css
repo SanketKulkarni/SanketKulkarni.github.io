@@ -1,0 +1,354 @@
+      /* latin-ext */
+      @font-face {
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Lato Regular'), local('Lato-Regular'), url('fonts/lato.woff2') format('woff2');
+        unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+      }
+      /* latin */
+      @font-face {
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Lato Regular'), local('Lato-Regular'), url('fonts/lato.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+      }
+      /* latin */
+      @font-face {
+        font-family: 'Montserrat';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Montserrat-Bold'), url('fonts/montserrat.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+      }
+
+      /*
+
+      Primary Extra Dark rgb(0, 45,71)
+      Primary Dark rgb(0, 63,132)
+      Primary rgb(0,91,170)
+      Primary Light rgb(0,160,229)
+      Primary Extra Light rgb(135,198,229)
+      Primary Extra Extra Light rgb(224,242,252)
+      Accent rgb(255, 198, 0)
+      Accent Light rgb(255, 234, 170)
+      Accent Extra Light rgb( 244, 247, 216)
+
+      */
+
+      body{
+        font-family: 'Lato', sans-serif;
+        font-style:  normal;
+        color:#555;
+        line-height: 140%;
+      }
+
+      h1{
+        font-family: 'Montserrat', sans-serif;
+        font-style:  normal;
+        color: rgb(0,91,170);
+        line-height: 120%;
+      }
+
+      .jumbotron h1{
+        color: rgb(0,91,170);
+      }
+
+      h2{
+        font-family: 'Montserrat', sans-serif;
+        font-style:  normal;
+        color: rgb(0,91,170);
+        line-height: 120%;
+      }
+      h3{
+        font-family: 'Montserrat', sans-serif;
+        font-style:  normal;
+        color: rgb(0,91,170);
+        line-height: 130%;
+      }
+      h4{
+        font-family: 'Lato', sans-serif;
+        font-style:  normal;
+        color: #555;
+        line-height: 140%;
+      }
+      h5{
+        font-family: 'Lato', sans-serif;
+        font-style:  normal;
+        color: #555;
+        line-height: 140%;
+      }
+      h6{
+        font-family: 'Lato', sans-serif;
+        font-style:  normal;
+        color: #555;
+        line-height: 140%;
+      }
+      p{
+        font-family: 'Lato', sans-serif;
+        font-style:  normal;
+        color: #555;
+        line-height: 140%;
+      }
+      div{
+        font-family: 'Lato', sans-serif;
+        font-style:  normal;
+        color: #555;
+        line-height: 140%;
+      }
+
+
+      @media(max-width:767px){
+        body{
+          font-size: 16px;
+        }
+        h1{
+          font-size: 42px;
+          
+        }
+
+        h2{
+          font-size: 30px;
+          
+        }
+        h3{
+          font-size: 24px;
+          
+        }
+        h4{
+          font-size: 18px;        
+        }
+        h5{
+          font-size: 16px;        
+        }
+        h6{
+          font-size: 14px;        
+        }
+        p{
+          font-size: 16px;
+        }
+        div{
+          font-size: 16px;        
+        }
+
+        .jumbotron h1{
+          font-size: 34px;
+          
+        }
+
+        .jumbotron h2{
+          font-size: 28px;
+          
+        }
+        .jumbotron h3{
+          font-size: 18px;
+          
+        }
+        .jumbotron h4{
+          font-size: 18px;        
+        }
+        .jumbotron h5{
+          font-size: 14px;        
+        }
+        .jumbotron h6{
+          font-size: 11px;        
+        }
+        .jumbotron p{
+          font-size: 16px;
+          margin-top:15px;
+        }
+        .jumbotron div{
+          font-size: 16px;        
+        } 
+      }
+      @media(min-width:768px){
+        body{
+          font-size: 16px;
+        }
+        h1{
+          font-size: 38px;
+          
+        }
+
+        h2{
+          font-size: 30px;
+          
+        }
+        h3{
+          font-size: 22px;
+          
+        }
+        h4{
+          font-size: 16px;        
+        }
+        h5{
+          font-size: 14px;        
+        }
+        h6{
+          font-size: 12px;        
+        }
+        p{
+          font-size: 16px;
+        }
+        div{
+          font-size: 16px;        
+        }
+
+        .jumbotron h1{
+          font-size: 38px;
+          
+        }
+
+        .jumbotron h2{
+          font-size: 28px;
+          
+        }
+        .jumbotron h3{
+          font-size: 22px;
+          
+        }
+        .jumbotron h4{
+          font-size: 16px;        
+        }
+        .jumbotron h5{
+          font-size: 14px;        
+        }
+        .jumbotron h6{
+          font-size: 12px;        
+        }
+        .jumbotron p{
+          font-size: 16px;
+          margin-top:15px;
+        }
+        .jumbotron div{
+          font-size: 16px;        
+        } 
+      }
+      @media(min-width:992px){
+        body{
+          font-size: 16px;
+        }
+        h1{
+          font-size: 48px;
+          
+        }
+
+        h2{
+          font-size: 28px;
+          
+        }
+        h3{
+          font-size: 24px;
+          
+        }
+        h4{
+          font-size: 18px;        
+        }
+        h5{
+          font-size: 16px;        
+        }
+        h6{
+          font-size: 14px;        
+        }
+        p{
+          font-size: 16px;
+        }
+        div{
+          font-size: 16px;        
+        }
+
+        .jumbotron h1{
+          font-size: 48px;
+          
+        }
+
+        .jumbotron h2{
+          font-size: 28px;
+          
+        }
+        .jumbotron h3{
+          font-size: 24px;
+          
+        }
+        .jumbotron h4{
+          font-size: 18px;        
+        }
+        .jumbotron h5{
+          font-size: 14px;        
+        }
+        .jumbotron h6{
+          font-size: 11px;        
+        }
+        .jumbotron p{
+          font-size: 16px;
+          margin-top: 0px;
+        }
+        .jumbotron div{
+          font-size: 16px;        
+        } 
+      }
+      @media(min-width:1200px){
+        body{
+          font-size: 16px;
+        }
+        h1{
+          font-size: 56px;
+          
+        }
+
+        h2{
+          font-size: 34px;
+          
+        }
+        h3{
+          font-size: 26px;
+          
+        }
+        h4{
+          font-size: 18px;        
+        }
+        h5{
+          font-size: 16px;        
+        }
+        h6{
+          font-size: 14px;        
+        }
+        p{
+          font-size: 18px;
+        }
+        div{
+          font-size: 18px;        
+        }
+
+        .jumbotron h1{
+          font-size: 56px;
+          
+        }
+
+        .jumbotron h2{
+          font-size: 34px;
+          
+        }
+        .jumbotron h3{
+          font-size: 26px;
+          
+        }
+        .jumbotron h4{
+          font-size: 18px;        
+        }
+        .jumbotron h5{
+          font-size: 16px;        
+        }
+        .jumbotron h6{
+          font-size: 14px;        
+        }
+        .jumbotron p{
+          font-size: 18px;
+          margin-top: 0px;
+        }
+        .jumbotron div{
+          font-size: 18px;        
+        } 
+
+      }
