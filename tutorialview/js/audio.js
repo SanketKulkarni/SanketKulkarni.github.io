@@ -35,6 +35,7 @@ function playAudio(src) {
     window.addEventListener('keydown', removeBehaviorsRestrictions);
     window.addEventListener('mousedown', removeBehaviorsRestrictions);
     window.addEventListener('touchstart', removeBehaviorsRestrictions);
+    confirm("Would you like to play voice clips ?");
   } else {
     console.log('no user gesture required');
     setSource();
