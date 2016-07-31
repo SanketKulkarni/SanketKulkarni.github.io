@@ -26,14 +26,19 @@
 
 // Audio player
 var my_media = null;
+var src = null;
 // Play audio
 function playAudio(src) {
-
-  if(){
-    
+  this.src = src;
+  if (mediaPlaybackRequiresUserGesture()) {
+    console.log('wait for input event');
+    window.addEventListener('keydown', removeBehaviorsRestrictions);
+    window.addEventListener('mousedown', removeBehaviorsRestrictions);
+    window.addEventListener('touchstart', removeBehaviorsRestrictions);
+  } else {
+    console.log('no user gesture required');
+    setSource();
   }
-  my_media = new Audio(src, onSuccess, onError);
-  my_media.play();
 }
 
 function stopAudio() {
@@ -53,22 +58,19 @@ function onError(){
 
 function setSource() {
   console.log('set source');
-  var audio = document.querySelector('audio');
-  video.src = 'https://archive.org/download/anita-leker-med-kameran/anita-leker-med-kameran.' +
-              (video.canPlayType('video/mp4') ? 'mp4' : 'ogv');
+  my_media = new Audio(src, onSuccess, onError);
+  my_media.play();
 }
 
 function mediaPlaybackRequiresUserGesture() {
   // test if play() is ignored when not called from an input event handler
-  var video = document.createElement('video');
-  video.play();
-  return video.paused;
+  var my_media = new Audio();
+  my_media.play();
+  return my_media.paused;
 }
 
 function removeBehaviorsRestrictions() {
-  var video = document.querySelector('video');
-  console.log('call load()');
-  video.load();
+  my_media.load();
   window.removeEventListener('keydown', removeBehaviorsRestrictions);
   window.removeEventListener('mousedown', removeBehaviorsRestrictions);
   window.removeEventListener('touchstart', removeBehaviorsRestrictions);
@@ -77,12 +79,4 @@ function removeBehaviorsRestrictions() {
 }
 
 
-if (mediaPlaybackRequiresUserGesture()) {
-  console.log('wait for input event');
-  window.addEventListener('keydown', removeBehaviorsRestrictions);
-  window.addEventListener('mousedown', removeBehaviorsRestrictions);
-  window.addEventListener('touchstart', removeBehaviorsRestrictions);
-} else {
-  console.log('no user gesture required');
-  setSource();
-}
+
